@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDo List</title>
+    <style>
+        body {
+            font-size: 18px; 
+            text-align: center; 
+        }
+        h1 {
+            font-size: 32px; 
+            font-weight: bold; 
+        }
+        form, ul {
+            margin: 0 auto; 
+            width: fit-content; 
+        }
+        li {
+            text-align: left; 
+        }
+        .form-group {
+            margin-bottom: 10px; 
+        }
+        .add-button {
+            display: block; 
+            margin: 10px auto; 
+        }
+    </style>
+</head>
+<body>
+    <h1>할 일 목록</h1>
+    <form action="/todos/" method="post">
+        <div class="form-group">
+            <input type="text" name="title" placeholder="할 일" required>
+        </div>
+        <div class="form-group">
+            <input type="text" name="description" placeholder="세부 내역">
+        </div>
+        <div class="form-group">
+            <input type="checkbox" name="completed" value="true"> 완료
+        </div>
+        <button type="submit" class="add-button">할 일 추가</button>
+    </form>
+    <ul>
+        {% for todo_item in todo_items %}
+        <li>
+            <strong>{{ todo_item.title }}</strong>: {{ todo_item.description }} - 
+            {% if todo_item.completed %}완료{% else %}미완료{% endif %}
+            <!--업데이트-->
+            <form action="/todos/{{ todo_item.id }}/update" method="post" style="display: inline;">
+                <input type="hidden" name="title" value="{{ todo_item.title }}">
+                <input type="hidden" name="description" value="{{ todo_item.description }}">
+                <input type="hidden" name="completed" value="{{ not todo_item.completed }}">
+                <button type="submit">완료/미완료 변경</button>
+            </form>
+            <!--삭제-->
+            <form action="/todos/{{ todo_item.id }}/delete" method="post" style="display: inline;">
+                <button type="submit">삭제</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
